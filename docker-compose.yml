@@ -1,0 +1,23 @@
+services:
+  # This is your "Dummy" network container (replacing Gluetun for now)
+  network-bridge:
+    image: alpine
+    container_name: network-bridge
+    command: sleep infinity # Just keeps the container alive
+    ports:
+      - "9091:9091"          # Web UI
+      - "6881:6881"          # Torrent TCP
+      - "6881:6881/udp"      # Torrent UDP
+    restart: unless-stopped
+
+  biglybt:
+    build: .
+    container_name: biglybt
+    # Route through the bridge
+    network_mode: "service:network-bridge" 
+    depends_on:
+      - network-bridge
+    volumes:
+      - ./config:/config
+      - ./downloads:/downloads
+    restart: unless-stopped

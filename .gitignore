@@ -1,0 +1,20 @@
+# --- BiglyBT Local Data ---
+# These are the bind-mount targets for your container
+/config/
+/downloads/
+
+# --- Docker & System ---
+.env
+.env.*
+.docker-compose.un~
+
+# --- Java/Build Artifacts ---
+# In case any jars are downloaded to the host during testing
+*.jar
+*.class
+
+# --- OS / IDE ---
+.DS_Store
+.vscode/
+.idea/
+*.swp
