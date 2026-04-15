@@ -1,23 +1,37 @@
 services:
-  # This is your "Dummy" network container (replacing Gluetun for now)
-  network-bridge:
-    image: alpine
-    container_name: network-bridge
-    command: sleep infinity # Just keeps the container alive
+  gluetun:
+    image: qmcgaw/gluetun
+    container_name: gluetun
+    cap_add:
+      - NET_ADMIN
     ports:
-      - "9091:9091"          # Web UI
-      - "6881:6881"          # Torrent TCP
-      - "6881:6881/udp"      # Torrent UDP
+      - 9091:9091 # BiglyBT Web UI
+    environment:
+      - VPN_SERVICE_PROVIDER=protonvpn
+      - VPN_TYPE=wireguard
+      - VPN_PORT_FORWARDING=on
+
+      # ↓↓↓ Replace these with values from your ProtonVPN WireGuard .conf ↓↓↓
+      - WIREGUARD_PRIVATE_KEY=X
+      - WIREGUARD_ADDRESSES=10.2.0.2/32
+      - SERVER_HOSTNAMES=node-us-390.protonvpn.net # Example Server
+      # ↑↑↑ Replace these with values from your ProtonVPN WireGuard .conf ↑↑↑
+
+      - TZ=America/New_York
+    volumes:
+      - ./gluetun:/gluetun
+      - ./forwarded-port:/tmp/gluetun
     restart: unless-stopped
 
   biglybt:
     build: .
     container_name: biglybt
-    # Route through the bridge
-    network_mode: "service:network-bridge" 
+    network_mode: "service:gluetun"
     depends_on:
-      - network-bridge
+      gluetun:
+        condition: service_healthy
     volumes:
       - ./config:/config
       - ./downloads:/downloads
+      - ./forwarded-port:/tmp/gluetun
     restart: unless-stopped

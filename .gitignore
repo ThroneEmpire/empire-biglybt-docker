@@ -3,6 +3,10 @@
 /config/
 /downloads/
 
+# --- Gluetun Stuff
+/gluetun
+/forwarded-port
+
 # --- Docker & System ---
 .env
 .env.*

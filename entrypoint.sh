@@ -1,4 +1,6 @@
 #!/bin/bash
+export TMUX_TMPDIR=/tmp
+mkdir -p /tmp
 
 # Configuration Paths
 CONFIG_DIR="/config"
@@ -20,24 +22,35 @@ mkdir -p "$CONFIG_DIR"
 
 export _JAVA_OPTIONS="-Dcom.biglybt.console.batch=1 -Dcom.biglybt.console.skip_updates=1"
 
-if [ ! -f "$CONFIG_DIR/plugins/xmwebui/xmwebui.jar" ]; then
-    echo "First run: Forcing WebUI Installation..."
-    
-    # We use a subshell and a timeout to ensure it doesn't hang the whole boot
+# Run only on first webui setup
+if [ ! -d "$CONFIG_DIR/plugins/xmwebui" ]; then
+    echo "First run: WebUI directory not found. Installing..."
     (
-        sleep 15 # Give the engine time to initialize
+        sleep 15 
         echo "plugin install xmwebui"
         sleep 5
         echo "set \"Plugin.xmwebui.Password Enable\" true boolean"
         echo "set \"Plugin.xmwebui.User\" \"admin\" string"
         echo "set \"Plugin.xmwebui.Password\" \"admin\" password"
         echo "set \"Plugin.xmwebui.Port\" 9091 int"
+	# Set download directory
+        echo "set \"Default save path\" \"/downloads\" string"
+        echo "set \"Completed Files Directory\" \"/downloads\" string"
+
         echo "cfg save"
         sleep 2
         echo "quit"
     ) | java $JAVA_ARGS -cp "$CP" com.biglybt.ui.Main --ui=console
+else
+    echo "WebUI already exists in $CONFIG_DIR/plugins/xmwebui. Skipping setup."
 fi
 
-echo "Starting BiglyBT Engine..."
+# Start the watcher in background
+bash /opt/biglybt/port-watcher.sh &
 
-exec java $JAVA_ARGS -cp "$CP" com.biglybt.ui.Main --ui=console < /dev/null
+echo "Starting BiglyBT Engine inside Tmux..."
+
+tmux -S /tmp/bbt.sock new-session -d -s bbt "java $JAVA_ARGS -cp \"$CP\" com.biglybt.ui.Main --ui=console"
+
+# Keep container running
+tail -f /dev/null
