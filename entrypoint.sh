@@ -33,7 +33,7 @@ if [ ! -d "$CONFIG_DIR/plugins/xmwebui" ]; then
         echo "set \"Plugin.xmwebui.User\" \"admin\" string"
         echo "set \"Plugin.xmwebui.Password\" \"admin\" password"
         echo "set \"Plugin.xmwebui.Port\" 9091 int"
-	# Set download directory
+        # Set download directory
         echo "set \"Default save path\" \"/downloads\" string"
         echo "set \"Completed Files Directory\" \"/downloads\" string"
 
@@ -45,12 +45,30 @@ else
     echo "WebUI already exists in $CONFIG_DIR/plugins/xmwebui. Skipping setup."
 fi
 
+# Disable unwanted built-in plugins (runs once)
+UNWANTED_PLUGINS="azbuddy azintsimpleapi azlocaltracker azbpupnp azbpsharehoster"
+
+if [ ! -f "$CONFIG_DIR/.plugins-disabled" ]; then
+    echo "Disabling unwanted plugins..."
+    (
+        sleep 15
+        for PLUGIN in $UNWANTED_PLUGINS; do
+            echo "set \"PluginInfo.$PLUGIN.enabled\" false boolean"
+        done
+        echo "cfg save"
+        sleep 2
+        echo "quit"
+    ) | java $JAVA_ARGS -cp "$CP" com.biglybt.ui.Main --ui=console
+    touch "$CONFIG_DIR/.plugins-disabled"
+    echo "Unwanted plugins disabled."
+fi
+
 # Start the watcher in background
 bash /opt/biglybt/port-watcher.sh &
 
 echo "Starting BiglyBT Engine inside Tmux..."
 
-tmux -S /tmp/bbt.sock new-session -d -s bbt "java $JAVA_ARGS -cp \"$CP\" com.biglybt.ui.Main --ui=console"
+touch /tmp/biglybt.log
+tmux -S /tmp/bbt.sock new-session -d -s bbt "java $JAVA_ARGS -cp \"$CP\" com.biglybt.ui.Main --ui=console 2>&1 | tee /tmp/biglybt.log"
 
-# Keep container running
-tail -f /dev/null
+tail -f /tmp/biglybt.log
