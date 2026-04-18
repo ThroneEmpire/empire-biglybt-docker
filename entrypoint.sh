@@ -46,7 +46,7 @@ else
 fi
 
 # Disable unwanted built-in plugins (runs once)
-UNWANTED_PLUGINS="azbuddy azintsimpleapi azlocaltracker azbpupnp azbpsharehoster"
+UNWANTED_PLUGINS="azmsgsync azbuddy azintsimpleapi azlocaltracker azbpupnp azbpsharehoster"
 
 if [ ! -f "$CONFIG_DIR/.plugins-disabled" ]; then
     echo "Disabling unwanted plugins..."
