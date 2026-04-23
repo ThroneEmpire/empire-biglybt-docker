@@ -5,7 +5,7 @@ echo "Stopping and removing Docker resources..."
 docker compose down --rmi all --volumes --remove-orphans
 
 echo "Wiping local config and download files..."
-sudo rm -rf ./config ./downloads
+sudo rm -rf ./config ./downloads ./biglybt
 
 WG_KEY=$(grep WIREGUARD_PRIVATE_KEY .env 2>/dev/null | cut -d= -f2-)
 if [ -n "$WG_KEY" ]; then

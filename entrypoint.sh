@@ -17,6 +17,16 @@ JAVA_ARGS="--add-opens=java.base/java.net=ALL-UNNAMED \
 
 mkdir -p "$CONFIG_DIR"
 
+# Install BiglyBT if not already present
+if [ ! -f "$BIGLY_DIR/BiglyBT.jar" ]; then
+    echo "Installing BiglyBT..."
+    mkdir -p "$BIGLY_DIR"
+    wget -qO /tmp/biglybt.tar.gz https://files.biglybt.com/installer/BiglyBT_unix.tar.gz \
+        && tar -xzf /tmp/biglybt.tar.gz -C "$BIGLY_DIR" --strip-components=1 \
+        && rm -f /tmp/biglybt.tar.gz
+    echo "BiglyBT installed."
+fi
+
 export _JAVA_OPTIONS="-Dcom.biglybt.console.batch=1 -Dcom.biglybt.console.skip_updates=1"
 
 SETUP_SOCK="/tmp/bbt-setup.sock"
@@ -95,6 +105,6 @@ touch /tmp/biglybt.log
 tmux -S /tmp/bbt.sock new-session -d -s bbt -n biglybt \
     "java $JAVA_ARGS -cp \"$CP\" com.biglybt.ui.Main --ui=console 2>&1 | tee /tmp/biglybt.log"
 
-tmux -S /tmp/bbt.sock new-window -t bbt -n watcher "bash /opt/biglybt/port-watcher.sh"
+tmux -S /tmp/bbt.sock new-window -t bbt -n watcher "bash /port-watcher.sh"
 
 tail -f /tmp/biglybt.log

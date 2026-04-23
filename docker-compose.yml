@@ -32,6 +32,7 @@ services:
       gluetun:
         condition: service_healthy
     volumes:
+      - ./biglybt:/opt/biglybt
       - ./config:/config
       - ./downloads:/downloads
       - ./forwarded-port:/tmp/gluetun

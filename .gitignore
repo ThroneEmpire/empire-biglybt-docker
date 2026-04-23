@@ -1,5 +1,6 @@
 # --- BiglyBT Local Data ---
 # These are the bind-mount targets for your container
+/biglybt/
 /config/
 /downloads/
 

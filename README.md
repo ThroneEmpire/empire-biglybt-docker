@@ -15,6 +15,7 @@ This setup runs BiglyBT locked behind a **Gluetun** VPN tunnel. A watcher script
 ---
 
 ## Structure
+* **`biglybt/`** — BiglyBT install (jars, libraries). Downloaded on first run and persisted so updates survive container rebuilds. Delete this folder to force a fresh install of the latest version.
 * **`config/`** — Persistent BiglyBT settings and plugins.
 * **`downloads/`** — Your downloaded files (mapped to `/downloads` inside the container).
 * **`forwarded-port/`** — Shared folder where Gluetun drops the current forwarded port.
