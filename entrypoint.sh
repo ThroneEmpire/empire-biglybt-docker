@@ -80,7 +80,7 @@ if [ ! -f "$CONFIG_DIR/.empire-biglybt-initial-config" ]; then
 fi
 
 # Disable unwanted built-in plugins (runs once)
-UNWANTED_PLUGINS="azmsgsync azbuddy azintsimpleapi azlocaltracker azbpupnp azbpsharehoster azbpcoreupdater azbppluginupdate azupdater azplatform2 azintnettest"
+UNWANTED_PLUGINS="azmsgsync azbuddy aercm azintsimpleapi azlocaltracker azbpupnp azbpsharehoster azbpcoreupdater azbppluginupdate azupdater azplatform2 azintnettest azrating"
 
 if [ ! -f "$CONFIG_DIR/.empire-biglybt-plugins-disabled" ]; then
     echo "Disabling unwanted plugins..."
