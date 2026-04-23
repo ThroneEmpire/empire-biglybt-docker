@@ -4,18 +4,18 @@ services:
     container_name: gluetun
     cap_add:
       - NET_ADMIN
-    ports:
-      - 9091:9091 # BiglyBT Web UI
+    # ports:
+    #   - 9091:9091 # BiglyBT Web UI
     environment:
-      - VPN_SERVICE_PROVIDER=protonvpn
+      - VPN_SERVICE_PROVIDER=${VPN_SERVICE_PROVIDER}
       - VPN_TYPE=wireguard
       - VPN_PORT_FORWARDING=on
 
-      # ↓↓↓ Replace these with values from your ProtonVPN WireGuard .conf ↓↓↓
-      - WIREGUARD_PRIVATE_KEY=X
-      - WIREGUARD_ADDRESSES=10.2.0.2/32
-      - SERVER_HOSTNAMES=node-us-390.protonvpn.net # Example Server
-      # ↑↑↑ Replace these with values from your ProtonVPN WireGuard .conf ↑↑↑
+      # ↓↓↓ Set these in your .env file ↓↓↓
+      - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
+      - WIREGUARD_ADDRESSES=${WIREGUARD_ADDRESSES}
+      - SERVER_HOSTNAMES=${SERVER_HOSTNAMES}
+      # ↑↑↑ Set these in your .env file ↑↑↑
 
       - TZ=America/New_York
     volumes:

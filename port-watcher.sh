@@ -11,10 +11,10 @@ while true; do
         if [ "$NEW_PORT" != "$LAST_PORT" ] && [ ! -z "$NEW_PORT" ]; then
             echo "[Watcher] Updating BiglyBT to port $NEW_PORT"
             
-            tmux -S /tmp/bbt.sock send-keys -t bbt "set TCP.Listen.Port $NEW_PORT" Enter
-            tmux -S /tmp/bbt.sock send-keys -t bbt "set UDP.Listen.Port $NEW_PORT" Enter
-            tmux -S /tmp/bbt.sock send-keys -t bbt "set UDP.NonData.Listen.Port $NEW_PORT" Enter
-            tmux -S /tmp/bbt.sock send-keys -t bbt "cfg save" Enter
+            tmux -S /tmp/bbt.sock send-keys -t bbt:biglybt "set TCP.Listen.Port $NEW_PORT" Enter
+            tmux -S /tmp/bbt.sock send-keys -t bbt:biglybt "set UDP.Listen.Port $NEW_PORT" Enter
+            tmux -S /tmp/bbt.sock send-keys -t bbt:biglybt "set UDP.NonData.Listen.Port $NEW_PORT" Enter
+            tmux -S /tmp/bbt.sock send-keys -t bbt:biglybt "cfg save" Enter
             
             LAST_PORT=$NEW_PORT
         fi
