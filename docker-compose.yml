@@ -5,7 +5,8 @@ services:
     cap_add:
       - NET_ADMIN
     # ports:
-    #   - 9091:9091 # BiglyBT Web UI
+    #   - 8090:8090 # Nexus Web UI (uncomment after running web-gui.sh)
+    #   - 9091:9091 # xmwebui (unused)
     environment:
       - VPN_SERVICE_PROVIDER=${VPN_SERVICE_PROVIDER}
       - VPN_TYPE=wireguard

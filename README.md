@@ -52,3 +52,12 @@ Inside tmux, `Ctrl+B 0` is the BiglyBT console and `Ctrl+B 1` is the port watche
 | `remake.sh` | Full wipe and rebuild — prompts to preserve WireGuard credentials |
 | `attach.sh` | Attaches to the BiglyBT tmux session |
 | `shutdown.sh` | Stops the containers |
+| `web-gui.sh` | Installs and configures the Nexus web UI plugin |
+
+---
+
+## Web UI
+
+Run `./web-gui.sh` to install the [Nexus plugin](https://github.com/ThroneEmpire/empire-biglybt-nexus-plugin), which exposes a qBittorrent-compatible API so you can use any qBittorrent remote UI (VueTorrent, etc.) with BiglyBT.
+
+After running the script, uncomment port `8090` in `docker-compose.yml` under the gluetun ports section and run `docker compose up -d`.
